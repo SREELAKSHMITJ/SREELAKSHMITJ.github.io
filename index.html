@@ -226,18 +226,6 @@
         </div>
 
 
-        <!-- FIRST-SCREEN SCROLL CUE -->
-        <a
-            href="#projects"
-            class="floating-scroll-cue"
-            id="floating-scroll-cue"
-            aria-label="Explore projects"
-        >
-            <span>Explore Projects</span>
-            <span class="floating-scroll-arrow">↓</span>
-        </a>
-
-
 
         <!-- ======================================
              PROJECTS
@@ -274,11 +262,16 @@
                 <article class="project-showcase reveal">
 
                     <div class="project-image">
-
-                        <img
-                            src="assets/images/powerbi-overview.png"
-                            alt="Power BI banking reconciliation dashboard"
+                        <a
+                            href="assets/images/powerbi-overview.png"
+                            class="image-lightbox-link"
+                            aria-label="Open Power BI banking reconciliation dashboard"
                         >
+                            <img
+                                src="assets/images/powerbi-overview.png"
+                                alt="Power BI banking reconciliation dashboard"
+                            >
+                        </a>
 
                     </div>
 
@@ -364,10 +357,16 @@
 
                     <div class="gallery-card gallery-large">
 
-                        <img
-                            src="assets/images/excel-dashboard.png"
-                            alt="Excel reconciliation operational dashboard"
+                        <a
+                            href="assets/images/excel-dashboard.png"
+                            class="image-lightbox-link"
+                            aria-label="Open Excel Operational Dashboard"
                         >
+                            <img
+                                src="assets/images/excel-dashboard.png"
+                                alt="Excel Operational Dashboard"
+                            >
+                        </a>
 
                         <div>
                             <strong>
@@ -384,10 +383,16 @@
 
                     <div class="gallery-card">
 
-                        <img
-                            src="assets/images/powerbi-data-quality-detail.png"
-                            alt="Power BI data quality dashboard"
+                        <a
+                            href="assets/images/powerbi-data-quality-detail.png"
+                            class="image-lightbox-link"
+                            aria-label="Open Power BI Data Quality Analysis"
                         >
+                            <img
+                                src="assets/images/powerbi-data-quality-detail.png"
+                                alt="Power BI Data Quality Analysis"
+                            >
+                        </a>
 
                         <div>
                             <strong>
@@ -404,10 +409,16 @@
 
                     <div class="gallery-card">
 
-                        <img
-                            src="assets/images/pytest-results.png"
-                            alt="Pytest automated test results"
+                        <a
+                            href="assets/images/pytest-results.png"
+                            class="image-lightbox-link"
+                            aria-label="Open Automated Pytest Validation Results"
                         >
+                            <img
+                                src="assets/images/pytest-results.png"
+                                alt="Automated Pytest Validation Results"
+                            >
+                        </a>
 
                         <div>
                             <strong>
@@ -769,7 +780,7 @@
                         <span class="experience-marker peach"></span>
 
                         <p class="experience-type">
-                            1.5+ Years · Quality Assurance
+                            Quality Assurance · Tata Consultancy Services (TCS) · Jul 2021 – Jan 2023
                         </p>
 
                         <h3>
@@ -798,7 +809,7 @@
                         <span class="experience-marker copper"></span>
 
                         <p class="experience-type">
-                            Technical Operations
+                            Technical Operations · Teleperformance Canada · Jul 2026 – Oct 2026
                         </p>
 
                         <h3>
@@ -898,6 +909,8 @@
 
                                 <p>
                                     Conestoga College · Ontario, Canada
+                                    <br>
+                                    Graduated with Distinction · GPA 3.80/4.00
                                 </p>
                             </div>
 
@@ -922,6 +935,26 @@
                             </div>
 
                         </article>
+
+                       <article class="education-item">
+
+                            <div>
+                                <span>Certs</span>
+                            </div>
+
+                            <div>
+                                <h3>
+                                    Professional Certifications
+                                </h3>
+
+                                <p>
+                                    Google IT Support Professional Certificate
+                                    <br>
+                                    Microsoft MTA: Introduction to Programming Using Python · 2019
+                                </p>
+                            </div>
+
+                        </article> 
 
                     </div>
 
@@ -1034,6 +1067,47 @@
         </div>
 
     </footer>
+
+
+
+    <!-- Project image lightbox -->
+    <div
+        class="image-lightbox"
+        id="image-lightbox"
+        aria-hidden="true"
+    >
+        <div
+            class="image-lightbox-backdrop"
+            data-lightbox-close
+        ></div>
+
+        <div
+            class="image-lightbox-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Project image preview"
+        >
+            <button
+                class="image-lightbox-close"
+                id="image-lightbox-close"
+                type="button"
+                aria-label="Close image preview"
+            >
+                ×
+            </button>
+
+            <img
+                id="image-lightbox-image"
+                src=""
+                alt=""
+            >
+
+            <p
+                class="image-lightbox-caption"
+                id="image-lightbox-caption"
+            ></p>
+        </div>
+    </div>
 
 
     <script src="script.js"></script>

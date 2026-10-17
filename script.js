@@ -14,43 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ==================================================
-       ELEMENT REFERENCES
+       GENERIC SCROLL REVEAL
     ================================================== */
 
     const revealElements =
         document.querySelectorAll(".reveal");
 
-    const projectIntro =
-        document.querySelector(".project-intro");
-
-    const projectRevealItems =
-        document.querySelectorAll(
-            "#projects .reveal"
-        );
-
-    const scrollCue =
-        document.getElementById(
-            "floating-scroll-cue"
-        );
-
-    const menuToggle =
-        document.getElementById(
-            "menu-toggle"
-        );
-
-    const mobileMenu =
-        document.getElementById(
-            "mobile-menu"
-        );
-
-
-    /* ==================================================
-       GENERIC SCROLL REVEAL
-    ================================================== */
 
     const revealObserver =
         new IntersectionObserver(
-            (entries) => {
+            (entries, observer) => {
 
                 entries.forEach((entry) => {
 
@@ -61,10 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         );
 
                         /*
-                         * Each item only animates once
-                         * during the current page state.
+                         * Reveal each item once.
                          */
-                        revealObserver.unobserve(
+                        observer.unobserve(
                             entry.target
                         );
                     }
@@ -80,13 +52,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     revealElements.forEach((element) => {
+
         revealObserver.observe(element);
+
     });
+
+
+    /* ==================================================
+       PROJECT INTRO REVEAL
+    ==================================================
+
+       The Projects heading has its own reveal class
+       instead of the generic .reveal class.
+
+       It now works independently on desktop,
+       laptop, tablet and mobile.
+    ================================================== */
+
+    const projectIntro =
+        document.querySelector(".project-intro");
+
+
+    if (projectIntro) {
+
+        const projectIntroObserver =
+            new IntersectionObserver(
+                (entries, observer) => {
+
+                    entries.forEach((entry) => {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target.classList.add(
+                                "visible"
+                            );
+
+                            observer.unobserve(
+                                entry.target
+                            );
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.12,
+                    rootMargin: "0px 0px -35px 0px"
+                }
+            );
+
+
+        projectIntroObserver.observe(
+            projectIntro
+        );
+
+    }
 
 
     /* ==================================================
        MOBILE HAMBURGER MENU
     ================================================== */
+
+    const menuToggle =
+        document.getElementById("menu-toggle");
+
+    const mobileMenu =
+        document.getElementById("mobile-menu");
+
 
     if (menuToggle && mobileMenu) {
 
@@ -99,10 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         "open"
                     );
 
+
                 menuToggle.classList.toggle(
                     "active",
                     isOpen
                 );
+
 
                 menuToggle.setAttribute(
                     "aria-expanded",
@@ -127,9 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         "open"
                     );
 
+
                     menuToggle.classList.remove(
                         "active"
                     );
+
 
                     menuToggle.setAttribute(
                         "aria-expanded",
@@ -145,243 +181,234 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ==================================================
-       FIRST-SCREEN EXPLORE CUE
-       + PROJECT INTRO REVEAL
+       PROJECT IMAGE LIGHTBOX
     ================================================== */
 
-    let introActivated = false;
-
-
-    function activateProjectsIntro() {
-
-        if (introActivated) {
-            return;
-        }
-
-        introActivated = true;
-
-
-        /*
-         * Hide the first-screen cue.
-         */
-        if (scrollCue) {
-            scrollCue.classList.add(
-                "hidden"
-            );
-        }
-
-
-        /*
-         * Fade in the Projects heading.
-         */
-        if (projectIntro) {
-            projectIntro.classList.add(
-                "visible"
-            );
-        }
-
-
-        /*
-         * We only need to listen for the visitor's
-         * first scroll.
-         */
-        window.removeEventListener(
-            "scroll",
-            handleOpeningScroll
+    const projectImages =
+        document.querySelectorAll(
+            ".project-image img, .project-gallery img"
         );
 
-    }
 
-
-    function handleOpeningScroll() {
+    if (projectImages.length > 0) {
 
         /*
-         * Once the recruiter begins scrolling,
-         * they already understand that the site
-         * continues below the hero.
+         * Create one reusable lightbox.
          */
-        if (window.scrollY > 25) {
-            activateProjectsIntro();
-        }
 
-    }
+        const lightbox =
+            document.createElement("div");
 
+        lightbox.className = "image-lightbox";
 
-    /*
-     * Clicking "Explore Projects" should trigger
-     * the same visual transition.
-     */
-    if (scrollCue) {
-
-        scrollCue.addEventListener(
-            "click",
-            () => {
-                activateProjectsIntro();
-            }
+        lightbox.setAttribute(
+            "aria-hidden",
+            "true"
         );
 
-    }
+
+        lightbox.innerHTML = `
+            <button
+                class="image-lightbox-close"
+                type="button"
+                aria-label="Close image"
+            >
+                ×
+            </button>
+
+            <img
+                class="image-lightbox-image"
+                src=""
+                alt=""
+            >
+        `;
 
 
-    /* ==================================================
-       OPENING STATE / REFRESH BEHAVIOUR
-    ================================================== */
-
-    function showFreshOpeningState() {
-
-        introActivated = false;
+        document.body.appendChild(
+            lightbox
+        );
 
 
-        /*
-         * Hide the Projects intro again.
-         */
-        if (projectIntro) {
+        const lightboxImage =
+            lightbox.querySelector(
+                ".image-lightbox-image"
+            );
 
-            projectIntro.classList.remove(
-                "visible"
+
+        const closeButton =
+            lightbox.querySelector(
+                ".image-lightbox-close"
+            );
+
+
+        function openLightbox(image) {
+
+            lightboxImage.src =
+                image.getAttribute("src");
+
+            lightboxImage.alt =
+                image.getAttribute("alt") || "";
+
+
+            lightbox.classList.add("open");
+
+            lightbox.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+
+            document.body.classList.add(
+                "lightbox-open"
             );
 
         }
 
 
-        /*
-         * Reset the project cards so their
-         * reveal animations can run again.
-         */
-        projectRevealItems.forEach((item) => {
+        function closeLightbox() {
 
-            item.classList.remove(
-                "visible"
+            lightbox.classList.remove("open");
+
+            lightbox.setAttribute(
+                "aria-hidden",
+                "true"
             );
+
+
+            document.body.classList.remove(
+                "lightbox-open"
+            );
+
 
             /*
-             * Re-observe in case the browser restored
-             * the page from cache after it had already
-             * animated previously.
+             * Clear image after animation.
              */
-            revealObserver.observe(item);
+
+            window.setTimeout(
+                () => {
+
+                    if (
+                        !lightbox.classList.contains(
+                            "open"
+                        )
+                    ) {
+
+                        lightboxImage.src = "";
+
+                    }
+
+                },
+                250
+            );
+
+        }
+
+
+        projectImages.forEach((image) => {
+
+            image.setAttribute(
+                "tabindex",
+                "0"
+            );
+
+            image.setAttribute(
+                "role",
+                "button"
+            );
+
+
+            image.addEventListener(
+                "click",
+                (event) => {
+
+                    /*
+                     * Prevent the existing image link
+                     * from opening a new browser tab.
+                     */
+
+                    event.preventDefault();
+
+                    openLightbox(image);
+
+                }
+            );
+
+
+            /*
+             * Keyboard accessibility.
+             */
+
+            image.addEventListener(
+                "keydown",
+                (event) => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        openLightbox(image);
+
+                    }
+
+                }
+            );
 
         });
 
 
         /*
-         * Bring back Explore Projects.
+         * Close button.
          */
-        if (scrollCue) {
 
-            scrollCue.classList.remove(
-                "hidden"
-            );
-
-        }
+        closeButton.addEventListener(
+            "click",
+            closeLightbox
+        );
 
 
         /*
-         * Start listening for the first scroll again.
+         * Clicking the dark area closes it.
          */
-        window.removeEventListener(
-            "scroll",
-            handleOpeningScroll
+
+        lightbox.addEventListener(
+            "click",
+            (event) => {
+
+                if (event.target === lightbox) {
+
+                    closeLightbox();
+
+                }
+
+            }
         );
 
-        window.addEventListener(
-            "scroll",
-            handleOpeningScroll,
-            {
-                passive: true
+
+        /*
+         * ESC closes it.
+         */
+
+        document.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (
+                    event.key === "Escape" &&
+                    lightbox.classList.contains(
+                        "open"
+                    )
+                ) {
+
+                    closeLightbox();
+
+                }
+
             }
         );
 
     }
 
-
-    function showReturningPageState() {
-
-        introActivated = true;
-
-
-        /*
-         * Someone refreshed while already
-         * farther down the page.
-         *
-         * Don't show the first-screen cue.
-         */
-        if (scrollCue) {
-
-            scrollCue.classList.add(
-                "hidden"
-            );
-
-        }
-
-
-        /*
-         * Projects heading should already be visible.
-         */
-        if (projectIntro) {
-
-            projectIntro.classList.add(
-                "visible"
-            );
-
-        }
-
-
-        window.removeEventListener(
-            "scroll",
-            handleOpeningScroll
-        );
-
-    }
-
-
-    function setCorrectPageState() {
-
-        /*
-         * If the browser is genuinely at the top,
-         * treat this as the opening screen.
-         */
-        if (window.scrollY <= 40) {
-
-            showFreshOpeningState();
-
-        } else {
-
-            /*
-             * If Chrome restored the user's old
-             * scroll position, preserve that position.
-             */
-            showReturningPageState();
-
-        }
-
-    }
-
-
-    /*
-     * Initial state.
-     */
-    setCorrectPageState();
-
-
-    /*
-     * pageshow is especially useful when Chrome
-     * restores a page from its back/forward cache.
-     */
-    window.addEventListener(
-        "pageshow",
-        () => {
-
-            /*
-             * Allow the browser to finish restoring
-             * its scroll position before checking it.
-             */
-            requestAnimationFrame(() => {
-                setCorrectPageState();
-            });
-
-        }
-    );
-
 });
-

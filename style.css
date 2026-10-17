@@ -1825,98 +1825,6 @@ img {
     }
 }
 
-/* ==================================================
-   EXPLORE PROJECTS CUE
-================================================== */
-
-.floating-scroll-cue {
-    position: fixed;
-
-    left: 50%;
-    bottom: 18px;
-
-    transform: translateX(-50%);
-
-    z-index: 80;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    gap: 1px;
-
-    color: var(--text-soft);
-
-    font-size: 0.62rem;
-    font-weight: 700;
-
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-
-    /* intentionally no pill */
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 0;
-
-    opacity: 0.82;
-
-    transition:
-        opacity 0.3s ease,
-        transform 0.3s ease,
-        visibility 0.3s ease;
-}
-
-.floating-scroll-arrow {
-    color: var(--copper);
-
-    font-size: 1.15rem;
-    line-height: 1;
-
-    margin-top: 1px;
-
-    animation: cueArrow 1.8s ease-in-out infinite;
-}
-
-@keyframes cueArrow {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(4px);
-    }
-
-}
-
-.floating-scroll-cue:hover {
-    color: var(--copper-dark);
-}
-
-.floating-scroll-cue.hidden {
-    opacity: 0;
-
-    visibility: hidden;
-
-    pointer-events: none;
-
-    transform:
-        translateX(-50%)
-        translateY(8px);
-}
-
-@media (max-width: 620px) {
-
-    .floating-scroll-cue {
-        bottom: 10px;
-        font-size: 0.56rem;
-    }
-
-}
-
 
 /* Final hero sizing */
 
@@ -2037,3 +1945,376 @@ img {
 
 }
 
+.project-gallery a {
+    cursor: pointer;
+}
+/* ==================================================
+   PROJECT IMAGE LINKS
+================================================== */
+
+.image-lightbox-link {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
+.image-lightbox-link:focus-visible {
+    outline: 2px solid var(--copper);
+    outline-offset: 4px;
+    border-radius: 14px;
+}
+
+
+/* ==================================================
+   PROJECT IMAGE LIGHTBOX
+================================================== */
+
+.image-lightbox {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+.image-lightbox.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.image-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(25, 23, 21, 0.82);
+
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.image-lightbox-dialog {
+    position: relative;
+    z-index: 1;
+
+    width: min(94vw, 1500px);
+    max-height: 92vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+}
+
+.image-lightbox-dialog img {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: 100%;
+    max-height: 84vh;
+
+    object-fit: contain;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 28px 80px rgba(0, 0, 0, 0.30);
+}
+
+.image-lightbox-close {
+    position: absolute;
+
+    top: -14px;
+    right: -14px;
+
+    z-index: 2;
+
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+
+    background: rgba(255, 253, 249, 0.96);
+
+    color: var(--text);
+
+    font-size: 1.6rem;
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.image-lightbox-close:hover {
+    background: var(--peach-light);
+}
+
+.image-lightbox-close:focus-visible {
+    outline: 2px solid var(--peach);
+    outline-offset: 3px;
+}
+
+.image-lightbox-caption {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 0.84rem;
+    text-align: center;
+}
+
+body.lightbox-open {
+    overflow: hidden;
+}
+
+
+/* ==================================================
+   EXPLORE PROJECTS CUE — FINAL RESPONSIVE BEHAVIOUR
+================================================== */
+
+/*
+   Hidden by default.
+   It only appears on large screens with enough room.
+*/
+
+.floating-scroll-cue {
+    display: none;
+}
+
+@media (min-width: 1600px) and (min-height: 900px) {
+
+    .floating-scroll-cue {
+        display: flex;
+    }
+
+}
+
+
+@media (max-width: 620px) {
+
+    .image-lightbox {
+        padding: 12px;
+    }
+
+    .image-lightbox-dialog {
+        width: 96vw;
+        max-height: 94vh;
+    }
+
+    .image-lightbox-dialog img {
+        max-height: 82vh;
+        border-radius: 10px;
+    }
+
+    .image-lightbox-close {
+        top: -10px;
+        right: -4px;
+
+        width: 38px;
+        height: 38px;
+
+        font-size: 1.4rem;
+    }
+
+    .image-lightbox-caption {
+        font-size: 0.76rem;
+    }
+
+}
+
+/* ==================================================
+   PROJECT IMAGE LIGHTBOX
+================================================== */
+
+body.lightbox-open {
+    overflow: hidden;
+}
+
+
+/* Full-screen dark backdrop */
+
+.image-lightbox {
+    position: fixed;
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 70px 40px 40px;
+
+    background: rgba(20, 18, 17, 0.88);
+
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+
+.image-lightbox.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+
+/* The actual enlarged screenshot */
+
+.image-lightbox-image {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: min(92vw, 1500px);
+    max-height: 84vh;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+    background: white;
+
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.42);
+}
+
+
+/* Close button */
+
+.image-lightbox-close {
+    position: fixed;
+
+    top: 22px;
+    right: 28px;
+
+    z-index: 10001;
+
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.95);
+    color: #252321;
+
+    font-family: Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.28);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.image-lightbox-close:hover {
+    transform: scale(1.07);
+    background: white;
+}
+
+
+/* Make portfolio screenshots feel clickable */
+
+.project-image img,
+.project-gallery img {
+    cursor: zoom-in;
+}
+
+
+/* Tablet */
+
+@media (max-width: 950px) {
+
+    .image-lightbox {
+        padding:
+            75px 24px
+            30px;
+    }
+
+    .image-lightbox-image {
+        max-width: 94vw;
+        max-height: 82vh;
+    }
+
+    .image-lightbox-close {
+        top: 18px;
+        right: 20px;
+    }
+
+}
+
+
+/* Mobile */
+
+@media (max-width: 620px) {
+
+    .image-lightbox {
+        padding:
+            70px 12px
+            20px;
+    }
+
+    .image-lightbox-image {
+        max-width: 96vw;
+        max-height: 80vh;
+
+        border-radius: 8px;
+    }
+
+    .image-lightbox-close {
+        top: 14px;
+        right: 14px;
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 1.7rem;
+    }
+
+}
