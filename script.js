@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const revealElements =
         document.querySelectorAll(".reveal");
 
-
     const revealObserver =
         new IntersectionObserver(
             (entries, observer) => {
@@ -33,9 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             "visible"
                         );
 
-                        /*
-                         * Reveal each item once.
-                         */
                         observer.unobserve(
                             entry.target
                         );
@@ -60,13 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ==================================================
        PROJECT INTRO REVEAL
-    ==================================================
-
-       The Projects heading has its own reveal class
-       instead of the generic .reveal class.
-
-       It now works independently on desktop,
-       laptop, tablet and mobile.
     ================================================== */
 
     const projectIntro =
@@ -131,12 +120,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         "open"
                     );
 
-
                 menuToggle.classList.toggle(
                     "active",
                     isOpen
                 );
-
 
                 menuToggle.setAttribute(
                     "aria-expanded",
@@ -161,11 +148,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         "open"
                     );
 
-
                     menuToggle.classList.remove(
                         "active"
                     );
-
 
                     menuToggle.setAttribute(
                         "aria-expanded",
@@ -184,22 +169,19 @@ document.addEventListener("DOMContentLoaded", () => {
        PROJECT IMAGE LIGHTBOX
     ================================================== */
 
-    const projectImages =
+    const imageButtons =
         document.querySelectorAll(
-            ".project-image img, .project-gallery img"
+            ".image-zoom-trigger"
         );
 
 
-    if (projectImages.length > 0) {
-
-        /*
-         * Create one reusable lightbox.
-         */
+    if (imageButtons.length > 0) {
 
         const lightbox =
             document.createElement("div");
 
-        lightbox.className = "image-lightbox";
+        lightbox.className =
+            "image-lightbox";
 
         lightbox.setAttribute(
             "aria-hidden",
@@ -211,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <button
                 class="image-lightbox-close"
                 type="button"
-                aria-label="Close image"
+                aria-label="Close enlarged image"
             >
                 ×
             </button>
@@ -224,16 +206,13 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
 
-        document.body.appendChild(
-            lightbox
-        );
+        document.body.appendChild(lightbox);
 
 
         const lightboxImage =
             lightbox.querySelector(
                 ".image-lightbox-image"
             );
-
 
         const closeButton =
             lightbox.querySelector(
@@ -244,113 +223,58 @@ document.addEventListener("DOMContentLoaded", () => {
         function openLightbox(image) {
 
             lightboxImage.src =
-                image.getAttribute("src");
+                image.src;
 
             lightboxImage.alt =
-                image.getAttribute("alt") || "";
+                image.alt || "";
 
-
-            lightbox.classList.add("open");
+            lightbox.classList.add(
+                "open"
+            );
 
             lightbox.setAttribute(
                 "aria-hidden",
                 "false"
             );
 
-
             document.body.classList.add(
                 "lightbox-open"
             );
+
+            closeButton.focus();
 
         }
 
 
         function closeLightbox() {
 
-            lightbox.classList.remove("open");
+            lightbox.classList.remove(
+                "open"
+            );
 
             lightbox.setAttribute(
                 "aria-hidden",
                 "true"
             );
 
-
             document.body.classList.remove(
                 "lightbox-open"
-            );
-
-
-            /*
-             * Clear image after animation.
-             */
-
-            window.setTimeout(
-                () => {
-
-                    if (
-                        !lightbox.classList.contains(
-                            "open"
-                        )
-                    ) {
-
-                        lightboxImage.src = "";
-
-                    }
-
-                },
-                250
             );
 
         }
 
 
-        projectImages.forEach((image) => {
+        imageButtons.forEach((button) => {
 
-            image.setAttribute(
-                "tabindex",
-                "0"
-            );
-
-            image.setAttribute(
-                "role",
-                "button"
-            );
-
-
-            image.addEventListener(
+            button.addEventListener(
                 "click",
-                (event) => {
+                () => {
 
-                    /*
-                     * Prevent the existing image link
-                     * from opening a new browser tab.
-                     */
+                    const image =
+                        button.querySelector("img");
 
-                    event.preventDefault();
-
-                    openLightbox(image);
-
-                }
-            );
-
-
-            /*
-             * Keyboard accessibility.
-             */
-
-            image.addEventListener(
-                "keydown",
-                (event) => {
-
-                    if (
-                        event.key === "Enter" ||
-                        event.key === " "
-                    ) {
-
-                        event.preventDefault();
-
+                    if (image) {
                         openLightbox(image);
-
                     }
 
                 }
@@ -359,19 +283,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
-        /*
-         * Close button.
-         */
-
         closeButton.addEventListener(
             "click",
             closeLightbox
         );
 
-
-        /*
-         * Clicking the dark area closes it.
-         */
 
         lightbox.addEventListener(
             "click",
@@ -386,10 +302,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-
-        /*
-         * ESC closes it.
-         */
 
         document.addEventListener(
             "keydown",
